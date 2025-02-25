@@ -1,0 +1,55 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+    "organizeImports": {
+      "enabled": true
+    },
+    "formatter": {
+      "enabled": true,
+      "indentWidth": 2,
+      "indentStyle": "space",
+      "lineWidth": 120,
+      "lineEnding": "lf"
+    },
+    "linter": {
+      "enabled": true,
+      "rules": {
+        "recommended": true,
+        "correctness": {
+          "noUnusedVariables": "error",
+          "noUnusedImports": "info"
+        },
+        "style": {
+          "noUselessElse": "off",
+          "noNonNullAssertion": "warn"
+        },
+        "complexity": {
+          "noForEach": "off"
+        },
+        "suspicious": {
+          "noConsoleLog": "warn",
+          "useAwait": "error"
+        }
+      },
+      "ignore": [
+        "**/.*.js"
+      ]
+    },
+    "javascript": {
+      "globals": ["React", "JSX"]
+    },
+    "files": {
+      "ignoreUnknown": true,
+      "ignore": [
+        "**/.next/**",
+        "**/.vscode/**",
+        "**/.turbo/**",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/generated/**",
+        "**/.contentlayer/**",
+        "**/coverage/**",
+        "design-system/**",
+        ".grit/**"
+      ]
+    }
+  }

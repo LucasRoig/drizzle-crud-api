@@ -1,0 +1,16 @@
+{
+  "name": "@repo/data-access",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {},
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "5.8.0-dev.20250215",
+    "@repo/database": "workspace:*",
+    "ts-pattern": "4.3.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.39.3"
+  }
+}

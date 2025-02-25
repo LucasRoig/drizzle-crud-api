@@ -1,0 +1,26 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_SOURCE")
+}
+
+generator drizzle {
+  provider = "prisma-generator-drizzle"
+  output   = "../src/drizzle"
+}
+
+model Movie {
+  id        Int      @id @default(autoincrement())
+  title     String
+  date      DateTime
+  actors    Person[] @relation("movies_as_actor")
+  directors Person[] @relation("movies_as_director")
+}
+
+model Person {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  birthDate DateTime
+  movies_as_actor    Movie[] @relation("movies_as_actor")
+  movies_as_director Movie[] @relation("movies_as_director")
+}

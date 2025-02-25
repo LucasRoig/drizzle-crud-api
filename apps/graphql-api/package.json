@@ -1,0 +1,26 @@
+{
+  "name": "graphql-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "@repo/database": "workspace:*",
+    "dotenv": "^16.4.7",
+    "drizzle-graphql": "^0.8.5",
+    "drizzle-orm": "^0.39.3",
+    "graphql": "^16.10.0",
+    "pg": "^8.13.3",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22",
+    "@types/pg": "^8.11.11",
+    "tsx": "^4.19.2",
+    "typescript": "5.7.3"
+  }
+}

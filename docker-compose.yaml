@@ -1,0 +1,8 @@
+services:
+  database:
+    image: postgres:17
+    container_name: drizzle-crud-api-database
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
