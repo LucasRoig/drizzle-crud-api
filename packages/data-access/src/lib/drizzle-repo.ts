@@ -167,19 +167,19 @@ type FindAllArgs<T extends Table> = {
   where?: FiltersCore<T>;
 };
 export function buildFindAll<T extends Table, TDatabase extends PgDatabase<any, any>>(table: T, db: TDatabase) {
-  return async (args?: FindAllArgs<T>) => {
+  return (args?: FindAllArgs<T>) => {
     try {
-      const query = db
+      return db
         .select({
           ...getTableColumns(table),
         })
         .from(table as Table)
-        .$dynamic();
-      if (args?.where) {
-        query.where(parseFilters(table, args.where));
-      }
-      const results = await query.execute();
-      return results;
+      //   .$dynamic();
+      // if (args?.where) {
+      //   query.where(parseFilters(table, args.where));
+      // }
+      // const results = await query.execute();
+      // return results;
     } catch (error) {
       console.error("Error fetching records:", error);
       throw error;
@@ -198,7 +198,7 @@ export function buildFindUnique<T extends Table, TDatabase extends PgDatabase<an
           ...getTableColumns(table),
         })
         .from(table as Table)
-        .where(parseFilters(table, args.where));
+        // .where(parseFilters(table, args.where));
       if (results.length > 1) {
         throw new Error("Multiple records found");
       }
@@ -240,10 +240,10 @@ type InsertManyArgs<T extends Table> = {
   data: InferInsertModel<T>[];
 };
 export function buildInsertMany<T extends Table, TDatabase extends PgDatabase<any, any>>(table: T, db: TDatabase) {
-  return async (args: InsertManyArgs<T>) => {
+  return (args: InsertManyArgs<T>) => {
     try {
-      const rows = await db.insert(table).values(args.data).returning();
-      return rows;
+      return db.insert(table).values(args.data).returning();
+      // return rows;
     } catch (error) {
       console.error("Error inserting record:", error);
       throw error;
@@ -298,6 +298,7 @@ const movies = findAllMovies({
     },
   },
 });
+
 const uniqueMovie = findUniqueMovie({
   where: {
     id: {
@@ -305,6 +306,7 @@ const uniqueMovie = findUniqueMovie({
     },
   },
 });
+
 const insertedMovie = insertMovie({
   data: {
     date: new Date(),
