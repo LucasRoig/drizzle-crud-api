@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { schema as drizzleSchema } from "./drizzle-schema/schema";
 import { getPostgresContainer } from "./postgres-provider";
-import { findMany } from "../src/lib/drizzle-repo";
+import { buildRepository } from "../src/lib/drizzle-repo";
 
 const schema = drizzleSchema;
 
@@ -14,7 +14,8 @@ test("findAll", async () => {
   ]
 
   await client.insert(schema.movies).values(movies);
-  const allMovies = await findMany(client, schema.movies);
+  const movieRepository = buildRepository(client, schema.movies);
+  const allMovies = await movieRepository.findMany();
   expect(allMovies.length).toBe(3);
   expect(allMovies[0]?.title).toBe("The Matrix");
   expect(allMovies[1]?.title).toBe("The Matrix Reloaded");
