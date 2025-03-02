@@ -4,7 +4,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest --typecheck run ",
     "prisma:test:generate": "prisma generate --schema=./test/prisma/schema.prisma"
   },
   "devDependencies": {

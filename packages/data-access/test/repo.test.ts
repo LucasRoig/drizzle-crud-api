@@ -1,50 +1,22 @@
 import { expect, test } from "vitest";
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from "@testcontainers/postgresql";
-import { Client } from "pg";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { execSync } from "node:child_process";
 import { schema as drizzleSchema } from "./drizzle-schema/schema";
+import { getPostgresContainer } from "./postgres-provider";
+import { findMany } from "../src/lib/drizzle-repo";
 
 const schema = drizzleSchema;
-function runMigrations(container: StartedPostgreSqlContainer) {
-  const dbUrl = container.getConnectionUri();
-  execSync(`export DB_SOURCE=${dbUrl} && pnpm prisma migrate deploy --schema=./test/prisma/schema.prisma`, { stdio: "inherit" });
-}
 
-async function getPostgresContainer() {
-  const container = await new PostgreSqlContainer().start();
-  const client = new Client({
-    connectionString: container.getConnectionUri(),
-  });
-  await client.connect();
-  const query = await client.query("select 1");
-  expect(query.rows.length).toBe(1);
-  await runMigrations(container);
-  const drizzleClient = drizzle(container.getConnectionUri(), {
-    schema,
-  });
-  return {
-    container,
-    drizzleClient,
-  };
-}
-
-test("insert 1", async () => {
+test("findAll", async () => {
   const { drizzleClient: client} = await getPostgresContainer();
-  const inserted = await client.insert(schema.movies).values({ title: "The Matrix", date: new Date() }).returning();
-  expect(inserted.length).toBe(1);
-  expect(inserted[0]?.title).toBe("The Matrix");
-  const allMovies = await client.select().from(schema.movies);
-  expect(allMovies.length).toBe(1);
-  expect(allMovies[0]?.title).toBe("The Matrix");
-});
+  const movies: typeof schema.movies.$inferInsert[] = [
+    { title: "The Matrix", date: new Date() },
+    { title: "The Matrix Reloaded", date: new Date() },
+    { title: "The Matrix Revolutions", date: new Date() },
+  ]
 
-test("insert 2", async () => {
-  const { drizzleClient: client} = await getPostgresContainer();
-  const inserted = await client.insert(schema.movies).values({ title: "The Matrix", date: new Date() }).returning();
-  expect(inserted.length).toBe(1);
-  expect(inserted[0]?.title).toBe("The Matrix");
-  const allMovies = await client.select().from(schema.movies);
-  expect(allMovies.length).toBe(1);
+  await client.insert(schema.movies).values(movies);
+  const allMovies = await findMany(client, schema.movies);
+  expect(allMovies.length).toBe(3);
   expect(allMovies[0]?.title).toBe("The Matrix");
-});
+  expect(allMovies[1]?.title).toBe("The Matrix Reloaded");
+  expect(allMovies[2]?.title).toBe("The Matrix Revolutions");
+})
